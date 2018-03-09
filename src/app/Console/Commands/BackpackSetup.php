@@ -15,29 +15,20 @@ use Spatie\Permission\Models\Role;
  */
 class BackpackSetup extends Command {
 
-    const UNPROCESSABLE_ENTITY = '422';
-    const OK = '200';
-
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'portal:install {--register}';
+    protected $signature = 'backpack:setup';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Run the S.C.I.F.S Installer';
+    protected $description = 'Run the backup user setup';
 
-    /**
-     * The Callback URI
-     *
-     * @var string
-     */
-    protected $uri = 'portal/register/';
 
     /**
      * @var string
@@ -59,10 +50,6 @@ class BackpackSetup extends Command {
      */
     protected $user;
 
-    /**
-     * @var
-     */
-    protected $http;
 
     /**
      * Create a new command instance.
@@ -71,7 +58,6 @@ class BackpackSetup extends Command {
     public function __construct()
     {
         parent::__construct();
-        $this->http = new Http();
     }
 
     /**
