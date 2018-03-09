@@ -4,6 +4,7 @@ namespace onethirtyone\backpacksetup\App\Console\Commands;
 
 use App\User;
 use Illuminate\Console\Command;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 /**
@@ -50,6 +51,8 @@ class BackpackSetup extends Command
             $this->createUser();
         }
 
+        $this->warn('Before proceeding add the HasRoles and CrudTrait traits to your User Model');
+
     }
 
     /**
@@ -57,13 +60,20 @@ class BackpackSetup extends Command
      */
     public function validateModels ()
     {
-        return in_array($this->traits(), class_uses(User::class));
+        foreach ($this->traits() as $trait) {
+            if (!in_array($trait, class_uses(new User()))) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
      * @return array
      */
-    public function traits ()
+    public
+    function traits ()
     {
         return [
             'Backpack\CRUD\CrudTrait',
@@ -74,29 +84,50 @@ class BackpackSetup extends Command
     /**
      *  Create Portal Roles
      */
-    public function createRolesAndPermissions ()
+    public
+    function createRolesAndPermissions ()
     {
-        if (!Role::where('name', 'administrator')->exists()) {
-            Role::create(['name' => 'administrator']);
+        foreach ($this->roles() as $role) {
+            if (!Role::where('name', $role)->exists()) {
+                Role::create(['name' => $role]);
+            }
         }
 
-        if (!Permission::where(['name', 'Access Admin Panel'])->exists()) {
-            Permission::create(['name' => 'Access Admin Panel']);
+        foreach ($this->permissions() as $permission) {
+            if (!Permission::where(['name', $permission])->exists()) {
+                Permission::create(['name' => $permission]);
+            }
         }
+
+        dd(Permission::all());
+    }
+
+    public function roles ()
+    {
+        return ['administrator'];
+    }
+
+    public function permissions ()
+    {
+        return ['Access Admin Panel'];
     }
 
     /**
      * Creates a new User
      */
-    public function createUser ()
+    public
+    function createUser ()
     {
-        User::create($this->getInputs())->assignRole('administrator');
+        $user = User::create($this->getInputs());
+        $user->assignRole($this->roles());
+        $user->givePermissionTo($this->permissions());
     }
 
     /**
      * Get user inputs
      */
-    public function getInputs ()
+    public
+    function getInputs ()
     {
         return [
             'name'     => $this->ask('Full name of Administrator'),
