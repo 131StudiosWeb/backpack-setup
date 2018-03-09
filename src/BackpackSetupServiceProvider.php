@@ -3,6 +3,7 @@
 namespace onethirtyone\backpacksetup;
 
 use Illuminate\Support\ServiceProvider;
+use onethirtyone\backpacksetup\App\Console\Commands\BackpackSetup;
 
 
 class BackpackSetupServiceProvider extends ServiceProvider {
