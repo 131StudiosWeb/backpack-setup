@@ -10,7 +10,7 @@
   ],
   "minimum-stability": "dev",
   "require": {
-    "laravel/framework": "5.5.*",
+    "laravel/framework": "^5.5.0",
     "backpack/base": "^0.8.9",
     "backpack/permissionmanager": "^2.1"
   },
