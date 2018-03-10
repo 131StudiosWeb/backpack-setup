@@ -1,11 +1,11 @@
 # onethirtyone/backpacksetup
 A simple setup process for Laravel Backpack
 
-The setup script will add an **Access Admin Panel** permiosson 
+The setup script will add an **Access Admin Panel** permission 
  and an **Administrator** role and will then prompt for an administrator
  user account.
  
- ##Installation
+ #Installation
  Install using composer
  ```$xslt
 composer require onethirtyone/backpacksetup
