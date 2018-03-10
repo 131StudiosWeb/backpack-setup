@@ -12,8 +12,7 @@ use Spatie\Permission\Models\Role;
  *
  * @package App\Console\Commands
  */
-class BackpackSetup extends Command
-{
+class BackpackSetup extends Command {
 
     /**
      * The name and signature of the console command.
@@ -27,14 +26,14 @@ class BackpackSetup extends Command
      *
      * @var string
      */
-    protected $description = 'Run the backup user setup';
+    protected $description = 'Run the setup process for Laravel Backpack';
 
 
     /**
      * Create a new command instance.
      *
      */
-    public function __construct ()
+    public function __construct()
     {
         parent::__construct();
     }
@@ -44,24 +43,27 @@ class BackpackSetup extends Command
      *
      * @return mixed
      */
-    public function handle ()
+    public function handle()
     {
-        if ($this->validateModels()) {
-            $this->createRolesAndPermissions();
-            $this->createUser();
+        if (!$this->validateModels())
+        {
+            return $this->warn('Before proceeding add the HasRoles and CrudTrait traits to your User Model');
         }
 
-        $this->warn('Before proceeding add the HasRoles and CrudTrait traits to your User Model');
+        $this->createRolesAndPermissions();
+        $this->createUser();
 
     }
 
     /**
      * @return bool
      */
-    public function validateModels ()
+    public function validateModels()
     {
-        foreach ($this->traits() as $trait) {
-            if (!in_array($trait, class_uses(new User()))) {
+        foreach ($this->traits() as $trait)
+        {
+            if (!in_array($trait, class_uses(new User())))
+            {
                 return false;
             }
         }
@@ -72,8 +74,7 @@ class BackpackSetup extends Command
     /**
      * @return array
      */
-    public
-    function traits ()
+    public function traits()
     {
         return [
             'Backpack\CRUD\CrudTrait',
@@ -84,30 +85,39 @@ class BackpackSetup extends Command
     /**
      *  Create Portal Roles
      */
-    public
-    function createRolesAndPermissions ()
+    public function createRolesAndPermissions()
     {
-        foreach ($this->roles() as $role) {
-            if (!Role::where('name', $role)->exists()) {
-                Role::create(['name' => $role]);
-            }
-        }
-
-        foreach ($this->permissions() as $permission) {
-            if (!Permission::where(['name', $permission])->exists()) {
+        foreach ($this->permissions() as $permission)
+        {
+            if (!Permission::where('name', $permission)->exists())
+            {
                 Permission::create(['name' => $permission]);
             }
         }
 
-        dd(Permission::all());
+        foreach ($this->roles() as $role)
+        {
+            if (!Role::where('name', $role)->exists())
+            {
+                Role::create(['name' => $role])->givePermissionTo($this->permissions());
+            }
+        }
+
+
     }
 
-    public function roles ()
+    /**
+     * @return array
+     */
+    public function roles()
     {
-        return ['administrator'];
+        return ['Administrator'];
     }
 
-    public function permissions ()
+    /**
+     * @return array
+     */
+    public function permissions()
     {
         return ['Access Admin Panel'];
     }
@@ -115,23 +125,19 @@ class BackpackSetup extends Command
     /**
      * Creates a new User
      */
-    public
-    function createUser ()
+    public function createUser()
     {
-        $user = User::create($this->getInputs());
-        $user->assignRole($this->roles());
-        $user->givePermissionTo($this->permissions());
+        $user = User::create($this->getInputs())->assignRole($this->roles());
     }
 
     /**
      * Get user inputs
      */
-    public
-    function getInputs ()
+    public function getInputs()
     {
         return [
-            'name'     => $this->ask('Full name of Administrator'),
-            'email'    => $this->ask('Email address of Administrator'),
+            'name' => $this->ask('Full name of Administrator'),
+            'email' => $this->ask('Email address of Administrator'),
             'password' => bcrypt($this->ask('Password for Administrator Account')),
         ];
     }
