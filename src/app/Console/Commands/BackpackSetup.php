@@ -4,6 +4,7 @@ namespace onethirtyone\backpacksetup\App\Console\Commands;
 
 use App\User;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Artisan;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -97,6 +98,8 @@ class BackpackSetup extends Command {
 
         foreach ($this->roles() as $role)
         {
+            Artisan::call('cache:clear');
+
             if (!Role::where('name', $role)->exists())
             {
                 Role::create(['name' => $role])->givePermissionTo($this->permissions());
