@@ -53,7 +53,7 @@ class BackpackSetup extends Command {
 
         $this->createRolesAndPermissions();
         $this->createUser();
-
+        $this->goodbye();
     }
 
     /**
@@ -143,5 +143,10 @@ class BackpackSetup extends Command {
             'email' => $this->ask('Email address of Administrator'),
             'password' => bcrypt($this->ask('Password for Administrator Account')),
         ];
+    }
+
+    public function goodbye()
+    {
+        $this->line('Setup Complete');
     }
 }

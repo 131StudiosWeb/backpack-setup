@@ -11,7 +11,7 @@
   "minimum-stability": "dev",
   "require": {
     "laravel/framework": ">=5.4.0",
-    "backpack/base": "^0.8.9",
+    "backpack/base": "0.*",
     "backpack/permissionmanager": "^2.1"
   },
   "require-dev": {
