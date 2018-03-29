@@ -20,14 +20,14 @@ class BackpackSetup extends Command {
      *
      * @var string
      */
-    protected $signature = 'backpack:setup';
+    protected $signature = 'onethirtyone:backpack-setup';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Run the setup process for Laravel Backpack';
+    protected $description = 'Run the Backpack for Laravel setup process.';
 
 
     /**
@@ -48,11 +48,13 @@ class BackpackSetup extends Command {
     {
         if (!$this->validateModels())
         {
-            return $this->warn('Before proceeding add the HasRoles and CrudTrait traits to your User Model');
+            return $this->warn('Before proceeding please add the HasRoles and CrudTrait traits to your User Model');
         }
 
         $this->createRolesAndPermissions();
         $this->createUser();
+
+        $this->goodbye();
 
     }
 
@@ -105,8 +107,6 @@ class BackpackSetup extends Command {
                 Role::create(['name' => $role])->givePermissionTo($this->permissions());
             }
         }
-
-
     }
 
     /**
@@ -114,7 +114,7 @@ class BackpackSetup extends Command {
      */
     public function roles()
     {
-        return app()->config('backpacksetup.roles');
+        return config('onethirtyone.backpacksetup.roles');
     }
 
     /**
@@ -122,7 +122,7 @@ class BackpackSetup extends Command {
      */
     public function permissions()
     {
-        return app()->config('backpack.permissions')];
+        return config('onethirtyone.backpacksetup.permissions');
     }
 
     /**
@@ -143,5 +143,13 @@ class BackpackSetup extends Command {
             'email' => $this->ask('Email address of Administrator'),
             'password' => bcrypt($this->ask('Password for Administrator Account')),
         ];
+    }
+
+    /**
+     *  Prints setup complete message
+     */
+    public function goodbye()
+    {
+        return $this->comment('Setup process complete.');
     }
 }

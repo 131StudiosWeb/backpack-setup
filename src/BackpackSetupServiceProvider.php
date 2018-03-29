@@ -16,8 +16,8 @@ class BackpackSetupServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__ . '/config/backpacksetup.php' => config_path('backpacksetup.php'),
-        ]);
+            __DIR__ . '/config/setup.php' => config_path('onethirtyone/backpacksetup.php'),
+        ],'config');
 
 
         if ($this->app->runningInConsole()) {
@@ -36,7 +36,7 @@ class BackpackSetupServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(
-            __DIR__ . '/config/backpackconfig.php', 'backpackconfig'
+            __DIR__ . '/config/setup.php', 'onethirtyone/backpacksetup'
         );
     }
 }
