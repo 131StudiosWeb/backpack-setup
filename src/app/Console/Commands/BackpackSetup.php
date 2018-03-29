@@ -114,7 +114,7 @@ class BackpackSetup extends Command {
      */
     public function roles()
     {
-        return ['Administrator'];
+        return app()->config('backpacksetup.roles');
     }
 
     /**
@@ -122,7 +122,7 @@ class BackpackSetup extends Command {
      */
     public function permissions()
     {
-        return ['Access Admin Panel'];
+        return app()->config('backpack.permissions')];
     }
 
     /**
