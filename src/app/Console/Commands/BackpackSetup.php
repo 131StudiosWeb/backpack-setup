@@ -13,7 +13,8 @@ use Spatie\Permission\Models\Role;
  *
  * @package App\Console\Commands
  */
-class BackpackSetup extends Command {
+class BackpackSetup extends Command
+{
 
     /**
      * The name and signature of the console command.
@@ -46,16 +47,30 @@ class BackpackSetup extends Command {
      */
     public function handle()
     {
-        if (!$this->validateModels())
-        {
+        if (!$this->validateModels()) {
             return $this->warn('Before proceeding please add the HasRoles and CrudTrait traits to your User Model');
         }
 
-        $this->createRolesAndPermissions();
-        $this->createUser();
+        switch ($this->getChoice()) {
+            case 0:
+                $this->createRolesAndPermissions();
+            case 1:
+                $this->createUser();
+                break;
+        }
 
         $this->goodbye();
+    }
 
+    /**
+     * @return string
+     */
+    public function getChoice()
+    {
+        return $this->choice('What would you like to do?', [
+            'Run Initial Backpack Setup',
+            'Create new Administrator',
+        ], 0);
     }
 
     /**
@@ -63,10 +78,8 @@ class BackpackSetup extends Command {
      */
     public function validateModels()
     {
-        foreach ($this->traits() as $trait)
-        {
-            if (!in_array($trait, class_uses(new User())))
-            {
+        foreach ($this->traits() as $trait) {
+            if (!in_array($trait, class_uses(new User()))) {
                 return false;
             }
         }
@@ -90,20 +103,18 @@ class BackpackSetup extends Command {
      */
     public function createRolesAndPermissions()
     {
-        foreach ($this->permissions() as $permission)
-        {
-            if (!Permission::where('name', $permission)->exists())
-            {
+        $this->comment('Creating Roles & Permissions');
+
+        foreach ($this->permissions() as $permission) {
+            if (!Permission::where('name', $permission)->exists()) {
                 Permission::create(['name' => $permission]);
             }
         }
 
-        foreach ($this->roles() as $role)
-        {
+        foreach ($this->roles() as $role) {
             Artisan::call('cache:clear');
 
-            if (!Role::where('name', $role)->exists())
-            {
+            if (!Role::where('name', $role)->exists()) {
                 Role::create(['name' => $role])->givePermissionTo($this->permissions());
             }
         }

@@ -16,13 +16,6 @@
   },
   "require-dev": {
   },
-  "extra": {
-    "laravel": {
-      "providers": [
-        "onethirtyone\\backpacksetup\\BackpackSetupServiceProvider"
-      ]
-    }
-  },
   "autoload": {
     "psr-4": {
       "onethirtyone\\backpacksetup\\": "src/"
