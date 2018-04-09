@@ -51,6 +51,7 @@ class BackpackSetup extends Command
             return $this->warn('Before proceeding please add the HasRoles and CrudTrait traits to your User Model');
         }
 
+      
         switch ($this->getChoice()) {
             case 0:
                 $this->createRolesAndPermissions();
@@ -162,5 +163,6 @@ class BackpackSetup extends Command
     public function goodbye()
     {
         return $this->comment('Setup process complete.');
+
     }
 }
