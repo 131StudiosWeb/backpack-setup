@@ -23,11 +23,19 @@ onethirtyone\backpacksetup\BackpackSetupServiceProvider::class
 ...
 ```
 
-run `php artisan vendor:publish` to publish config file.
+Publish the config file
+
+ ```
+ php artisan vendor:publish
+ ```
 
 Edit the `config\onethirtyone\backpacksetup.php` to add default roles and permissions for setup.
 
-Run `php artisan onethirtyone:backpack-setup` to setup Laravel Backpack
+Run the setup command
+
+ ```
+ php artisan onethirtyone:backpack-setup
+ ```
 
 
 
