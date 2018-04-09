@@ -20,5 +20,10 @@
     "psr-4": {
       "onethirtyone\\backpacksetup\\": "src/"
     }
+  },
+  "laravel": {
+    "providers": [
+      "onethirtyone\\backpacksetup\\BackpackSetupServiceProvider"
+    ]
   }
 }
