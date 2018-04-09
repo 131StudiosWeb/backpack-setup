@@ -13,21 +13,22 @@ use Spatie\Permission\Models\Role;
  *
  * @package App\Console\Commands
  */
-class BackpackSetup extends Command {
+class BackpackSetup extends Command
+{
 
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'backpack:setup';
+    protected $signature = 'onethirtyone:backpack-setup';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Run the setup process for Laravel Backpack';
+    protected $description = 'Run the Backpack for Laravel setup process.';
 
 
     /**
@@ -46,14 +47,31 @@ class BackpackSetup extends Command {
      */
     public function handle()
     {
-        if (!$this->validateModels())
-        {
-            return $this->warn('Before proceeding add the HasRoles and CrudTrait traits to your User Model');
+        if (!$this->validateModels()) {
+            return $this->warn('Before proceeding please add the HasRoles and CrudTrait traits to your User Model');
         }
 
-        $this->createRolesAndPermissions();
-        $this->createUser();
+      
+        switch ($this->getChoice()) {
+            case 0:
+                $this->createRolesAndPermissions();
+            case 1:
+                $this->createUser();
+                break;
+        }
+
         $this->goodbye();
+    }
+
+    /**
+     * @return string
+     */
+    public function getChoice()
+    {
+        return $this->choice('What would you like to do?', [
+            'Run Initial Backpack Setup',
+            'Create new Administrator',
+        ], 0);
     }
 
     /**
@@ -61,10 +79,8 @@ class BackpackSetup extends Command {
      */
     public function validateModels()
     {
-        foreach ($this->traits() as $trait)
-        {
-            if (!in_array($trait, class_uses(new User())))
-            {
+        foreach ($this->traits() as $trait) {
+            if (!in_array($trait, class_uses(new User()))) {
                 return false;
             }
         }
@@ -88,25 +104,21 @@ class BackpackSetup extends Command {
      */
     public function createRolesAndPermissions()
     {
-        foreach ($this->permissions() as $permission)
-        {
-            if (!Permission::where('name', $permission)->exists())
-            {
+        $this->comment('Creating Roles & Permissions');
+
+        foreach ($this->permissions() as $permission) {
+            if (!Permission::where('name', $permission)->exists()) {
                 Permission::create(['name' => $permission]);
             }
         }
 
-        foreach ($this->roles() as $role)
-        {
+        foreach ($this->roles() as $role) {
             Artisan::call('cache:clear');
 
-            if (!Role::where('name', $role)->exists())
-            {
+            if (!Role::where('name', $role)->exists()) {
                 Role::create(['name' => $role])->givePermissionTo($this->permissions());
             }
         }
-
-
     }
 
     /**
@@ -114,7 +126,7 @@ class BackpackSetup extends Command {
      */
     public function roles()
     {
-        return ['Administrator'];
+        return config('onethirtyone.backpacksetup.roles');
     }
 
     /**
@@ -122,7 +134,7 @@ class BackpackSetup extends Command {
      */
     public function permissions()
     {
-        return ['Access Admin Panel'];
+        return config('onethirtyone.backpacksetup.permissions');
     }
 
     /**
@@ -145,8 +157,12 @@ class BackpackSetup extends Command {
         ];
     }
 
+    /**
+     *  Prints setup complete message
+     */
     public function goodbye()
     {
-        $this->line('Setup Complete');
+        return $this->comment('Setup process complete.');
+
     }
 }

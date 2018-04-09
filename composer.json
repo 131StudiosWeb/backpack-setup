@@ -1,6 +1,7 @@
 {
   "name": "onethirtyone/backpack-setup",
-  "description": "Initial setup commands for Laravel Backpack",
+  "description": "Installs default set of users, roles and permissions for the Backpack for Laravel package",
+  "keywords": ["backpack","Laravel"],
   "license": "MIT",
   "authors": [
     {
@@ -11,17 +12,9 @@
   "minimum-stability": "dev",
   "require": {
     "laravel/framework": ">=5.4.0",
-    "backpack/base": "0.*",
     "backpack/permissionmanager": "^2.1"
   },
   "require-dev": {
-  },
-  "extra": {
-    "laravel": {
-      "providers": [
-        "onethirtyone\\backpacksetup\\BackpackSetupServiceProvider"
-      ]
-    }
   },
   "autoload": {
     "psr-4": {

@@ -6,7 +6,8 @@ use Illuminate\Support\ServiceProvider;
 use onethirtyone\backpacksetup\App\Console\Commands\BackpackSetup;
 
 
-class BackpackSetupServiceProvider extends ServiceProvider {
+class BackpackSetupServiceProvider extends ServiceProvider
+{
     /**
      * Bootstrap the application services.
      *
@@ -14,8 +15,12 @@ class BackpackSetupServiceProvider extends ServiceProvider {
      */
     public function boot()
     {
-        if ($this->app->runningInConsole())
-        {
+        $this->publishes([
+            __DIR__ . '/config/setup.php' => config_path('onethirtyone/backpacksetup.php'),
+        ],'config');
+
+
+        if ($this->app->runningInConsole()) {
             $this->commands([
                 BackpackSetup::class
             ]);
@@ -30,6 +35,8 @@ class BackpackSetupServiceProvider extends ServiceProvider {
      */
     public function register()
     {
-        //
+        $this->mergeConfigFrom(
+            __DIR__ . '/config/setup.php', 'onethirtyone/backpacksetup'
+        );
     }
 }
