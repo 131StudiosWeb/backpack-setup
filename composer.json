@@ -1,7 +1,10 @@
 {
   "name": "onethirtyone/backpack-setup",
   "description": "Installs default set of users, roles and permissions for the Backpack for Laravel package",
-  "keywords": ["backpack","Laravel"],
+  "keywords": [
+    "backpack",
+    "Laravel"
+  ],
   "license": "MIT",
   "authors": [
     {
@@ -21,9 +24,11 @@
       "onethirtyone\\backpacksetup\\": "src/"
     }
   },
-  "laravel": {
-    "providers": [
-      "onethirtyone\\backpacksetup\\BackpackSetupServiceProvider"
-    ]
+  "extra": {
+    "laravel": {
+      "providers": [
+        "onethirtyone\\backpacksetup\\BackpackSetupServiceProvider"
+      ]
+    }
   }
 }
